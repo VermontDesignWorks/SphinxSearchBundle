@@ -12,12 +12,16 @@
     }
   ],
   "require": {
-    "php": ">=5.3.3"
+    "php": ">=5.3.3",
+    "symfony/framework-bundle": ">=2.1"
   },
   "autoload": {
     "psr-0": {
       "Vdw\\SphinxsearchBundle": ""
-    }
+    },
+    "files": [
+        "Services/Search/SphinxAPI.php"
+    ]
   },
   "target-dir": "Vdw/SphinxsearchBundle"
 }
