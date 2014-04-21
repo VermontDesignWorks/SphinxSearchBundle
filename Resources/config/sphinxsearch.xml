@@ -6,7 +6,7 @@
 
     <parameters>
         <parameter key="vdw.sphinxsearch.indexer.class">Vdw\SphinxsearchBundle\Services\Indexer\Indexer</parameter>
-        <parameter key="vdw.sphinxsearch.search.class">Vdw\SphinxsearchBundle\Services\vdw.sphinxsearch</parameter>
+        <parameter key="vdw.sphinxsearch.search.class">Vdw\SphinxsearchBundle\Services\Search\Sphinxsearch</parameter>
     </parameters>
 
     <services>
