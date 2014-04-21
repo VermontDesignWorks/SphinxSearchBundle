@@ -6,20 +6,20 @@
 
     <parameters>
         <parameter key="vdw.sphinxsearch.indexer.class">Vdw\SphinxsearchBundle\Services\Indexer\Indexer</parameter>
-        <parameter key="vdw.sphinxsearch.search.class">Vdw\SphinxsearchBundle\Services\Search\Sphinxsearch</parameter>
+        <parameter key="vdw.sphinxsearch.search.class">Vdw\SphinxsearchBundle\Services\vdw.sphinxsearch</parameter>
     </parameters>
 
     <services>
         <service id="vdw.sphinxsearch.indexer" class="%vdw.sphinxsearch.indexer.class%">
-            <argument>%search.sphinxsearch.indexer.bin%</argument>
-            <argument>%search.sphinxsearch.indexes%</argument>
+            <argument>%vdw.sphinxsearch.indexer.bin%</argument>
+            <argument>%vdw.sphinxsearch.indexes%</argument>
         </service>
 
         <service id="vdw.sphinxsearch.search" class="%vdw.sphinxsearch.search.class%">
-            <argument>%search.sphinxsearch.searchd.host%</argument>
-            <argument>%search.sphinxsearch.searchd.port%</argument>
-            <argument>%search.sphinxsearch.searchd.socket%</argument>
-            <argument>%search.sphinxsearch.indexes%</argument>
+            <argument>%vdw.sphinxsearch.searchd.host%</argument>
+            <argument>%vdw.sphinxsearch.searchd.port%</argument>
+            <argument>%vdw.sphinxsearch.searchd.socket%</argument>
+            <argument>%vdw.sphinxsearch.indexes%</argument>
         </service>
     </services>
 </container>

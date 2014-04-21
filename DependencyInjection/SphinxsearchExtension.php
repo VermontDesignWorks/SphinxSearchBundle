@@ -26,21 +26,21 @@ class SphinxsearchExtension extends Extension
 		 * Indexer.
 		 */
 		if( isset($config['indexer']) ) {
-			$container->setParameter('search.sphinxsearch.indexer.bin', $config['indexer']['bin']);
+			$container->setParameter('vdw.sphinxsearch.indexer.bin', $config['indexer']['bin']);
 		}
 
 		/**
 		 * Indexes.
 		 */
-		$container->setParameter('search.sphinxsearch.indexes', $config['indexes']);
+		$container->setParameter('vdw.sphinxsearch.indexes', $config['indexes']);
 
 		/**
 		 * Searchd.
 		 */
 		if( isset($config['searchd']) ) {
-			$container->setParameter('search.sphinxsearch.searchd.host', $config['searchd']['host']);
-			$container->setParameter('search.sphinxsearch.searchd.port', $config['searchd']['port']);
-			$container->setParameter('search.sphinxsearch.searchd.socket', $config['searchd']['socket']);
+			$container->setParameter('vdw.sphinxsearch.searchd.host', $config['searchd']['host']);
+			$container->setParameter('vdw.sphinxsearch.searchd.port', $config['searchd']['port']);
+			$container->setParameter('vdw.sphinxsearch.searchd.socket', $config['searchd']['socket']);
 		}
 	}
 
