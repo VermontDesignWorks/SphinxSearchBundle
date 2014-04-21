@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v1.3.0
+------
+
+**Backwards compatibility breakage.**
+
+* Re-namespace parameters and services from `search` to `vdw` and the code from `Search` to `Vdw`
+
+* Implement `Sphinxsearch::setRankingMode`
+
+* Implement `Sphinxsearch::reset`, a shortcut for resetting SphinxClient's filters, groupBy, overrides, match mode and ranking mode settings
+
+* Implement `Sphinxsearch::searchFieldMatches`, a convenience function for determining which fields of a search result matched
+
 v1.2.2
 ------
 
