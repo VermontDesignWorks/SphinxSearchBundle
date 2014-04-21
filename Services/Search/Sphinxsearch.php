@@ -197,12 +197,26 @@ class Sphinxsearch
          * Perform the query.
          */
         $results = $this->sphinx->Query($query, $indexNames);
-        if( $results['status'] !== SEARCHD_OK )
-            throw new \RuntimeException(sprintf('Searching index "%s" for "%s" failed with error "%s".', $label, $query, $this->sphinx->getLastError()));
+
+        if( $results['status'] !== SEARCHD_OK ) {
+            throw new \RuntimeException(sprintf('Searching index%s "%s" for "%s" failed with error "%s".',
+                count($indexes) > 1 ? 'es' : '', implode(', ', $indexes), $query, $this->sphinx->getLastError()
+            ));
+        }
 
         return $results;
     }
 
+    /**
+     * Search for the specified query string in the specified indexes, returning which fields matched for each result
+     *
+     * @param $query
+     * @param array $indexes
+     * @param array $options
+     * @param bool $escapeQuery
+     * @return array
+     * @throws \RuntimeException
+     */
     public function searchFieldMatches($query, array $indexes, array $options = array(), $escapeQuery = true)
     {
         $this->setRankingMode(SPH_RANK_FIELDMASK);
