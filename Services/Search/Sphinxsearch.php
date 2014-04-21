@@ -25,16 +25,16 @@ class Sphinxsearch
 	 * $this->indexes should look like:
 	 *
 	 * $this->indexes = array(
-	 *   'IndexLabel' => 'Index name as defined in sphinxsearch.conf',
+	 *   'IndexLabel' => 'Index name as defined in sphinx/etc/sphinx.conf',
 	 *   ...,
 	 * );
 	 */
 	private $indexes;
 
 	/**
-	 * @var SphinxClient $sphinx
+	 * @var \SphinxClient $sphinx
 	 */
-	private $sphinx;
+	protected $sphinx;
 
 	/**
 	 * Constructor.
@@ -53,9 +53,9 @@ class Sphinxsearch
 
 		$this->sphinx = new \SphinxClient();
 		if( $this->socket !== null )
-			$this->sphinx->setServer($this->socket);
+			$this->sphinx->SetServer($this->socket);
 		else
-			$this->sphinx->setServer($this->host, $this->port);
+			$this->sphinx->SetServer($this->host, $this->port);
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Sphinxsearch
 	 */
 	public function escapeString($string)
 	{
-		return $this->sphinx->escapeString($string);
+		return $this->sphinx->EscapeString($string);
 	}
 
 	/**
@@ -77,8 +77,16 @@ class Sphinxsearch
 	 */
 	public function setMatchMode($mode)
 	{
-		$this->sphinx->setMatchMode($mode);
+		$this->sphinx->SetMatchMode($mode);
 	}
+
+    public function setRankingMode($mode)
+    {
+        if ($mode === SPH_RANK_FIELDMASK) {
+            $this->setMatchMode(SPH_MATCH_EXTENDED2);
+        }
+        $this->sphinx->SetRankingMode($mode);
+    }
 
 	/**
 	 * Set limits on the range and number of results returned.
@@ -90,7 +98,7 @@ class Sphinxsearch
 	 */
 	public function setLimits($offset, $limit, $max = 0, $cutoff = 0)
 	{
-		$this->sphinx->setLimits($offset, $limit, $max, $cutoff);
+		$this->sphinx->SetLimits($offset, $limit, $max, $cutoff);
 	}
 
 	/**
@@ -105,7 +113,7 @@ class Sphinxsearch
 	 */
 	public function setFieldWeights(array $weights)
 	{
-		$this->sphinx->setFieldWeights($weights);
+		$this->sphinx->SetFieldWeights($weights);
 	}
 
 	/**
@@ -117,7 +125,7 @@ class Sphinxsearch
 	 */
 	public function setFilter($attribute, $values, $exclude = false)
 	{
-		$this->sphinx->setFilter($attribute, $values, $exclude);
+		$this->sphinx->SetFilter($attribute, $values, $exclude);
 	}
 
 	/**
@@ -125,8 +133,20 @@ class Sphinxsearch
 	 */
 	public function resetFilters()
 	{
-		$this->sphinx->resetFilters();
+		$this->sphinx->ResetFilters();
 	}
+
+    /**
+     * Reset SphinxClient to its defaults
+     */
+    public function reset()
+    {
+        $this->sphinx->ResetFilters();
+        $this->sphinx->ResetGroupBy();
+        $this->sphinx->ResetOverrides();
+        $this->setMatchMode(SPH_MATCH_ALL);
+        $this->setRankingMode(SPH_RANK_PROXIMITY_BM25);
+    }
 
 	/**
 	 * Search for the specified query string.
@@ -141,7 +161,7 @@ class Sphinxsearch
 	public function search($query, array $indexes, array $options = array(), $escapeQuery = true)
 	{
 		if( $escapeQuery )
-			$query = $this->sphinx->escapeString($query);
+			$query = $this->sphinx->EscapeString($query);
 
 		/**
 		 * Build the list of indexes to be queried.
@@ -164,18 +184,18 @@ class Sphinxsearch
 		 * Set the offset and limit for the returned results.
 		 */
 		if( isset($options['result_offset']) && isset($options['result_limit']) )
-			$this->sphinx->setLimits($options['result_offset'], $options['result_limit']);
+			$this->sphinx->SetLimits($options['result_offset'], $options['result_limit']);
 
 		/**
 		 * Weight the individual fields.
 		 */
 		if( isset($options['field_weights']) )
-			$this->sphinx->setFieldWeights($options['field_weights']);
+			$this->sphinx->SetFieldWeights($options['field_weights']);
 
 		/**
 		 * Perform the query.
 		 */
-		$results = $this->sphinx->query($query, $indexNames);
+		$results = $this->sphinx->Query($query, $indexNames);
 		if( $results['status'] !== SEARCHD_OK )
 			throw new \RuntimeException(sprintf('Searching index "%s" for "%s" failed with error "%s".', $label, $query, $this->sphinx->getLastError()));
 
@@ -197,7 +217,7 @@ class Sphinxsearch
 		}
 
 		if( !empty($indexNames) )
-			$this->sphinx->addQuery($query, $indexNames);
+			$this->sphinx->AddQuery($query, $indexNames);
 	}
 
 	/**
@@ -207,6 +227,6 @@ class Sphinxsearch
 	 */
 	public function runQueries()
 	{
-		return $this->sphinx->runQueries();
+		return $this->sphinx->RunQueries();
 	}
 }
