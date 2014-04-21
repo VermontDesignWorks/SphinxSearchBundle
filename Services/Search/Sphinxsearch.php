@@ -203,6 +203,30 @@ class Sphinxsearch
         return $results;
     }
 
+    public function searchFieldMatches($query, array $indexes, array $options = array(), $escapeQuery = true)
+    {
+        $this->setRankingMode(SPH_RANK_FIELDMASK);
+
+        $searchResults = $this->search($query, $indexes, $options, $escapeQuery);
+        $this->reset();
+
+        $fieldMasks = array();
+        foreach ($searchResults['matches'] as $id => $data) $fieldMasks[$id] = (int)$data['weight'];
+
+        $fieldMatchResults = array();
+        foreach ($fieldMasks as $id => $weight) {
+
+            foreach ($searchResults['fields'] as $bitPosition => $field) {
+                // bitwise AND will equal 2^$bitPosition if the field matched (true), zero otherwise (false)
+                $fieldMatchResults[$id][$field] = (bool)(pow(2, $bitPosition) & $weight);
+            }
+        }
+
+        $searchResults['matches'] = $fieldMatchResults;
+
+        return $searchResults;
+    }
+
     /**
      * Adds a query to a multi-query batch using current settings.
      *
