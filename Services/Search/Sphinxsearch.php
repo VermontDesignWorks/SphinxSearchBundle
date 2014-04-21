@@ -1,6 +1,6 @@
 <?php
 
-namespace Search\SphinxsearchBundle\Services\Search;
+namespace Vdw\SphinxsearchBundle\Services\Search;
 
 class Sphinxsearch
 {

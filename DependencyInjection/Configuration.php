@@ -1,6 +1,6 @@
 <?php
 
-namespace Search\SphinxsearchBundle\DependencyInjection;
+namespace Vdw\SphinxsearchBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;

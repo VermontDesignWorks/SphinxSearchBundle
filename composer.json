@@ -1,5 +1,5 @@
 {
-  "name": "search/sphinxsearch-bundle",
+  "name": "vtdesignworks/sphinxsearch-bundle",
   "type": "symfony-bundle",
   "description": "Sphinx search bundle for Symfony 2",
   "keywords": ["sphinx", "sphinxsearch", "symfony2"],
@@ -16,8 +16,8 @@
   },
   "autoload": {
     "psr-0": {
-      "Search\\SphinxsearchBundle": ""
+      "Vdw\\SphinxsearchBundle": ""
     }
   },
-  "target-dir": "Search/SphinxsearchBundle"
+  "target-dir": "Vdw/SphinxsearchBundle"
 }

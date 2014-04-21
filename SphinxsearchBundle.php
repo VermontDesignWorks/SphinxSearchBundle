@@ -1,6 +1,6 @@
 <?php
 
-namespace Search\SphinxsearchBundle;
+namespace Vdw\SphinxsearchBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
