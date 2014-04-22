@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v1.3.1
+------
+
+**Backwards compatibility breakage.**
+
+* Rename bundle from `Search-SphinxsearchBundle` to `SphinxSearchBundle`
+
+* Change configuration alias from `sphinxsearch` to `sphinx_search`
+
 v1.3.0
 ------
 
