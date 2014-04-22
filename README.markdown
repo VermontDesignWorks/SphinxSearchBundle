@@ -37,16 +37,16 @@ sphinxsearch:
     indexes:
         Entity: index_name_from_sphinx_conf
     searchd:
-        host:   %sphinxsearch_host%
-        port:   %sphinxsearch_port%
-        socket: %sphinxsearch_socket%
+        host:   %sphinx_search_host%
+        port:   %sphinx_search_port%
+        socket: %sphinx_search_socket%
     indexer:
-        bin:    %sphinxsearch_indexer_bin%
+        bin:    %sphinx_search_indexer_bin%
 ```
 
 At least one index must be defined, and you may define as many as you like.
 
-In the above sample configuration, `Categories` is used as a label for the index named `%sphinxsearch_index_categories%` (as defined in `sphinx/etc/sphinx.conf`).  This allows you to avoid having to hard code raw index names inside of your code.
+In the above sample configuration, `Entity` is used as a label for the index named `index_name_from_sphinx_conf` (as defined in `sphinx/etc/sphinx.conf`).
 
 
 Usage examples:
@@ -56,8 +56,8 @@ The most basic search, using the above configuration as an example, would be:
 
 ``` php
 $indexesToSearch = array('Entity');
-$sphinxSearch = $this->get('vdw.sphinxsearch.search');
-$searchResults = $sphinxSearch->search('search query / keywords', $indexesToSearch);
+$sphinxSearch = $this->get('vdw.sphinx_search.search');
+$searchResults = $sphinxSearch->search('search query (or keywords)', $indexesToSearch);
 ```
 
 This performs a search for `search query` or `keywords` against the index labeled `Entity`.  The results of the search are stored in `$searchResults`.
@@ -74,12 +74,12 @@ $options = array(
         'SKU' => 3,
     ),
 );
-$sphinxSearch = $this->get('vdw.sphinxsearch.search');
+$sphinxSearch = $this->get('vdw.sphinx_search.search');
 $sphinxSearch->setFilter('disabled', array(1), true);
-$searchResults = $sphinxSearch->search('search query / keywords', $indexesToSearch, $options);
+$searchResults = $sphinxSearch->search('search query (or keywords)', $indexesToSearch, $options);
 ```
 
-This would again search `Entity` for `search query / keywords`, but now it will only return up to the first 25 matches and weight the `Name` and `SKU` fields higher than normal.  Note that in order to define a `result_offset` or a `result_limit`, you must explicitly define both values and pass them in `options` as an associative array.  Also, this search will use [the Extended query syntax](http://sphinxsearch.com/docs/current.html#extended-syntax), and exclude all results with a `disabled` attribute set to 1.
+This would again search `Entity` for `search query` or `keywords`, but now it will only return up to the first 25 matches and weight the `Name` and `SKU` fields higher than normal.  Note that in order to define a `result_offset` or a `result_limit`, you must explicitly define both values and pass them in `options` as an associative array.  Also, this search will use [the Extended query syntax](http://sphinxsearch.com/docs/current.html#extended-syntax), and exclude all results with a `disabled` attribute set to 1.
 
 
 License:
@@ -90,13 +90,13 @@ Copyright (c) 2014, Vermont Design Works
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met: 
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer. 
+   list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright notice,
    this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution. 
+   and/or other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
