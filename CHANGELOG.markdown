@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.4.0
+------
+
+**Backwards compatibility breakage.**
+
+* Refactor the search function to use the Symfony OptionsResolver, and optionally hydrate the results into Entities
+
 v1.3.1
 ------
 
