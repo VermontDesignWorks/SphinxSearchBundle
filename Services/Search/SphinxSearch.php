@@ -1,8 +1,8 @@
 <?php
 
-namespace Vdw\SphinxsearchBundle\Services\Search;
+namespace Vdw\SphinxSearchBundle\Services\Search;
 
-class Sphinxsearch
+class SphinxSearch
 {
     /**
      * @var string $host

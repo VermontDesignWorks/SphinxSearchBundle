@@ -1,6 +1,6 @@
 <?php
 
-namespace Vdw\SphinxsearchBundle\Services\Indexer;
+namespace Vdw\SphinxSearchBundle\Services\Indexer;
 
 use Assetic\Util\ProcessBuilder;
 

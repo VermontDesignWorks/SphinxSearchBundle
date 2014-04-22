@@ -1,14 +1,22 @@
 {
-  "name": "vtdesignworks/sphinxsearch-bundle",
+  "name": "vtdesignworks/sphinx-search-bundle",
   "type": "symfony-bundle",
   "description": "Sphinx search bundle for Symfony 2",
   "keywords": ["sphinx", "sphinxsearch", "symfony2"],
-  "homepage": "https://github.com/timewasted/Search-SphinxsearchBundle",
+  "homepage": "http://www.vtdesignworks.com",
   "license": "BSD-2-Clause",
   "authors": [
     {
       "name": "Ryan Rogers",
       "email": "ryan@timewasted.me"
+    },
+    {
+        "name": "Ben Glassman",
+        "email": "ben@vtdesignworks.com"
+    },
+    {
+        "name": "Brian Cappello",
+        "email": "brian@vtdesignworks.com"
     }
   ],
   "require": {
@@ -17,11 +25,11 @@
   },
   "autoload": {
     "psr-0": {
-      "Vdw\\SphinxsearchBundle": ""
+      "Vdw\\SphinxSearchBundle": ""
     },
     "files": [
         "Services/Search/SphinxAPI.php"
     ]
   },
-  "target-dir": "Vdw/SphinxsearchBundle"
+  "target-dir": "Vdw/SphinxSearchBundle"
 }

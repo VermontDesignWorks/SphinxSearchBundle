@@ -1,6 +1,6 @@
 <?php
 
-namespace Vdw\SphinxsearchBundle\DependencyInjection;
+namespace Vdw\SphinxSearchBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
