@@ -2,6 +2,9 @@
 
 namespace Vdw\SphinxSearchBundle\Services\Search;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vdw\SphinxSearchBundle\Entity\SearchResult;
+
 class SphinxSearch
 {
     /**
@@ -82,8 +85,9 @@ class SphinxSearch
 
     public function setRankingMode($mode)
     {
+        // undocumented dependency: fieldmask ranker depends on extended2 match mode
         if ($mode === SPH_RANK_FIELDMASK) {
-            $this->setMatchMode(SPH_MATCH_EXTENDED2);
+            $this->sphinx->SetMatchMode(SPH_MATCH_EXTENDED2);
         }
         $this->sphinx->SetRankingMode($mode);
     }
@@ -149,6 +153,114 @@ class SphinxSearch
     }
 
     /**
+     * @param string $query
+     * @param array $options
+     * @return array|int
+     * @throws \InvalidArgumentException
+     */
+    public function search($query, array $options = array())
+    {
+        $options = $this->resolveSearchOptions($options);
+
+        $searchResults = array(); // return value, an array of SearchResult objects
+        $fieldMatches = array();  // id => array(matchedFields)
+
+        // perform the necessary searches
+        if ($options['include_field_matches'] && !$options['total_only']) {
+            $fieldMatches = $this->doSearchFieldMatches($query, $options['indexes'], $options, $options['escape_query']);
+        }
+        $results = $this->doSearch($query, $options['indexes'], $options, $options['escape_query']);
+
+        // return early if we can
+        if ($options['total_only']) return $results['total_found'];
+        if ($options['raw_results']) return $results;
+
+        // convert results to an array of SearchResult objects
+        if (isset($results['matches'])) {
+
+            $resultWeights = array(); // id => weight
+            foreach ($results['matches'] as $id => $data) $resultWeights[(int)$id] = (int)$data['weight'];
+
+            // convert the ids to entities if a hydrator closure was passed in
+            if (!is_null($hydrator = $options['entity_hydrator'])) {
+
+                $hydratedResults = $hydrator(array_keys($resultWeights));
+
+                // sort the converted entities by their result weights
+                usort($hydratedResults, function($a, $b) use ($resultWeights) {
+                    return $resultWeights[$a->getId()] > $resultWeights[$b->getId()] ? -1 : 1;
+                });
+
+                // populate the return value with new SearchResult objects
+                foreach ($hydratedResults as $entity) {
+                    $searchResults[] = new SearchResult($entity->getId(), $entity, $resultWeights[$entity->getId()],
+                        $options['include_field_matches'] ? $fieldMatches[$entity->getId()] : null
+                    );
+                }
+
+            } else {
+
+                foreach ($results as $id => $data) {
+                    $data['id'] = $id;
+                    $searchResults[] = new SearchResult($id, (object)$data, (int)$data['weight'],
+                        $options['include_field_matches'] ? $fieldMatches[$id] : null
+                    );
+                }
+            }
+        }
+
+        return $searchResults;
+    }
+
+    protected function resolveSearchOptions(array $options)
+    {
+        $resolver = new OptionsResolver();
+
+        $resolver->setDefaults(array(
+            'result_offset' => 0,
+            'result_limit' => 100000,
+            'escape_query' => true,
+            'include_field_matches' => false,
+            'total_only' => false,
+            'raw_results' => false,
+        ));
+
+        $resolver->setOptional(array(
+            'field_weights',
+            'entity_hydrator',
+        ));
+
+        $resolver->setRequired(array(
+            'indexes',
+        ));
+
+        $resolver->setAllowedTypes(array(
+            'result_offset' => 'int',
+            'result_limit' => 'int',
+            'escape_query' => 'bool',
+            'indexes' => array('string', 'array'),
+            'include_field_matches' => 'bool',
+            'total_only' => 'bool',
+            'entity_hydrator' => 'callable',
+            'field_weights' => 'array',
+            'raw_results' => 'bool',
+        ));
+
+        $options = $resolver->resolve($options);
+
+        if ($options['raw_results'] && isset($options['entity_hydrator'])) {
+            throw new \InvalidArgumentException('Can only use one of `raw_results` or `entity_hydrator` at a time.');
+        }
+
+        // coerce indexes to an array if it isn't already
+        if (!is_array($options['indexes'])) {
+            $options['indexes'] = array($options['indexes']);
+        }
+
+        return $options;
+    }
+
+    /**
      * Search for the specified query string.
      *
      * @param string $query The query string that we are searching for.
@@ -159,7 +271,7 @@ class SphinxSearch
      * @return array The results of the search.
      * @throws \RuntimeException
      */
-    public function search($query, array $indexes, array $options = array(), $escapeQuery = true)
+    protected function doSearch($query, array $indexes, array $options = array(), $escapeQuery = true)
     {
         if( $escapeQuery )
             $query = $this->sphinx->EscapeString($query);
@@ -217,11 +329,10 @@ class SphinxSearch
      * @return array
      * @throws \RuntimeException
      */
-    public function searchFieldMatches($query, array $indexes, array $options = array(), $escapeQuery = true)
+    protected function doSearchFieldMatches($query, array $indexes, array $options = array(), $escapeQuery = true)
     {
         $this->setRankingMode(SPH_RANK_FIELDMASK);
-
-        $searchResults = $this->search($query, $indexes, $options, $escapeQuery);
+        $searchResults = $this->doSearch($query, $indexes, $options, $escapeQuery);
         $this->reset();
 
         $fieldMasks = array();
@@ -236,9 +347,7 @@ class SphinxSearch
             }
         }
 
-        $searchResults['matches'] = $fieldMatchResults;
-
-        return $searchResults;
+        return $fieldMatchResults;
     }
 
     /**
