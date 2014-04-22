@@ -1,35 +1,36 @@
 {
-  "name": "vtdesignworks/sphinx-search-bundle",
-  "type": "symfony-bundle",
-  "description": "Sphinx search bundle for Symfony 2",
-  "keywords": ["sphinx", "sphinxsearch", "symfony2"],
-  "homepage": "http://www.vtdesignworks.com",
-  "license": "BSD-2-Clause",
-  "authors": [
-    {
-      "name": "Ryan Rogers",
-      "email": "ryan@timewasted.me"
+    "name": "vtdesignworks/sphinx-search-bundle",
+    "type": "symfony-bundle",
+    "description": "Sphinx search bundle for Symfony 2",
+    "keywords": ["sphinx", "sphinxsearch", "symfony2"],
+    "homepage": "http://www.vtdesignworks.com",
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Ryan Rogers",
+            "email": "ryan@timewasted.me"
+        },
+        {
+            "name": "Ben Glassman",
+            "email": "ben@vtdesignworks.com"
+        },
+        {
+            "name": "Brian Cappello",
+            "email": "brian@vtdesignworks.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": ">=2.1",
+        "symfony/options-resolver": ">=2.1"
     },
-    {
-        "name": "Ben Glassman",
-        "email": "ben@vtdesignworks.com"
+    "autoload": {
+        "psr-0": {
+            "Vdw\\SphinxSearchBundle": ""
+        },
+        "files": [
+            "Services/Search/SphinxAPI.php"
+        ]
     },
-    {
-        "name": "Brian Cappello",
-        "email": "brian@vtdesignworks.com"
-    }
-  ],
-  "require": {
-    "php": ">=5.3.3",
-    "symfony/framework-bundle": ">=2.1"
-  },
-  "autoload": {
-    "psr-0": {
-      "Vdw\\SphinxSearchBundle": ""
-    },
-    "files": [
-        "Services/Search/SphinxAPI.php"
-    ]
-  },
-  "target-dir": "Vdw/SphinxSearchBundle"
+    "target-dir": "Vdw/SphinxSearchBundle"
 }
