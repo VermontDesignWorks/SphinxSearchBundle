@@ -182,7 +182,9 @@ class SphinxSearch
             foreach ($results['matches'] as $id => $data) $resultWeights[(int)$id] = (int)$data['weight'];
 
             // convert the ids to entities if a hydrator closure was passed in
-            if (!is_null($hydrator = $options['entity_hydrator'])) {
+            if (isset($options['entity_hydrator'])) {
+
+                $hydrator = $options['entity_hydrator'];
 
                 $hydratedResults = $hydrator(array_keys($resultWeights));
 
@@ -200,7 +202,7 @@ class SphinxSearch
 
             } else {
 
-                foreach ($results as $id => $data) {
+                foreach ($results['matches'] as $id => $data) {
                     $data['id'] = $id;
                     $searchResults[] = new SearchResult($id, (object)$data, (int)$data['weight'],
                         $options['include_field_matches'] ? $fieldMatches[$id] : null
