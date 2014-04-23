@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.4.1
+------
+* [FIX] Fix SphinxSearch class bugs
+
 v1.4.0
 ------
 
